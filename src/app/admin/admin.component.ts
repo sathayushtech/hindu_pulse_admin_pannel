@@ -363,6 +363,7 @@ export class AdminComponent {
 editedNewsItem: {
   headline?: string;
   desc?: string;
+  short_description?:string;
   link?: string;
   url?: string;
   category_id?: string;
@@ -421,15 +422,36 @@ ngOnInit() {
 // }
 
 
-fetchnews(): void {
-  this.adminservice.Getdata().subscribe(
+// fetchnews(): void {
+//   this.adminservice.Getdata().subscribe(
+//     data => {
+//       this.medianews = data.results;
+//       console.log("fetech data",this.medianews)
+//       this.ids = this.medianews.map((news: any) => news._id);
+//       this.medianews.forEach((news:any) => news.moved = false);
+//     }
+//   );
+// }
+
+// working
+fetchnews(pageNumber: number = 1, pageSize: number = 50): void {
+  this.adminservice.Getdata(pageNumber, pageSize).subscribe(
     data => {
-      this.medianews = data;
+      this.medianews = data.results;
+      console.log("fetched data", this.medianews);
       this.ids = this.medianews.map((news: any) => news._id);
-    
-      this.medianews.forEach((news:any) => news.moved = false);
+      this.medianews.forEach((news: any) => news.moved = false);
     }
   );
+}
+
+currentPage: number = 1;
+pageSize: number = 10;
+
+loadPage(pageNumber: number): void {
+  this.currentPage = pageNumber;
+  console.log("page numbers",this.currentPage)
+  this.fetchnews(this.currentPage, this.pageSize);
 }
 
 
@@ -505,6 +527,7 @@ saveChanges(): void {
       const updateItem = {
         headline: this.editedNewsItem.headline || currentNews.headline,
         desc: this.editedNewsItem.desc || currentNews.desc,
+        short_description:this.editedNewsItem.short_description||currentNews.short_description,
         link: currentNews.link,
         url: currentNews.url,
         category_id: this.editedNewsItem.category_id || currentNews.category_id,
@@ -554,13 +577,33 @@ deleteNews(id: any): void {
   );
 }
 
-productionnews(): void {
-  this.adminservice.productionnews().subscribe(
+// productionnews(): void {
+//   this.adminservice.productionnews().subscribe(
+//     data => {
+//       this.productiondata = data.results;
+//     }
+//   );
+// }
+
+productionnews(pageNumber: number = 1, pageSize: number = 10): void {
+  this.adminservice.productionnews(pageNumber, pageSize).subscribe(
     data => {
-      this.productiondata = data;
+      this.productiondata = data.results;
+      console.log("Fetched production data", this.productiondata);
     }
   );
 }
+currentProductionPage: number = 1;
+productionPageSize: number = 10;
+
+loadProductionPage(pageNumber: number): void {
+  this.currentProductionPage = pageNumber;
+  console.log("Production page number", this.currentProductionPage);
+  this.productionnews(this.currentProductionPage, this.productionPageSize);
+}
+
+
+
 
 toggleSelectAll(event: any): void {
   const isChecked = event.target.checked;
@@ -585,7 +628,7 @@ toggleSelectAll(event: any): void {
   // }
 
 
-  visitedNews:any;
+visitedNews:any;
 
 moveSelected(): void {
   const selectedItems = this.medianews.filter((news: any) => news.selected);
@@ -748,6 +791,7 @@ getBase64(file: File, callback: (base64String: string) => void): void {
     base64String = base64String.split(',')[1];
     console.log("string convention data", base64String)
     callback(base64String);
+    
   };
   reader.readAsDataURL(file);
 }
