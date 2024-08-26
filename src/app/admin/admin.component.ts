@@ -434,24 +434,51 @@ ngOnInit() {
 // }
 
 // working
+// fetchnews(pageNumber: number = 1, pageSize: number = 50): void {
+//   this.adminservice.Getdata(pageNumber, pageSize).subscribe(
+//     data => {
+//       this.medianews = data.results;
+//       console.log("fetched data", this.medianews);
+//       this.ids = this.medianews.map((news: any) => news._id);
+//       this.medianews.forEach((news: any) => news.moved = false);
+//     }
+//   );
+// }
+
+currentPage: number = 1;
+pageSize: number = 50;
+
+// loadPage(pageNumber: number): void {
+//   this.currentPage = pageNumber;
+//   console.log("page numbers",this.currentPage)
+//   this.fetchnews(this.currentPage, this.pageSize);
+// }
+
 fetchnews(pageNumber: number = 1, pageSize: number = 50): void {
   this.adminservice.Getdata(pageNumber, pageSize).subscribe(
     data => {
-      this.medianews = data.results;
-      console.log("fetched data", this.medianews);
-      this.ids = this.medianews.map((news: any) => news._id);
-      this.medianews.forEach((news: any) => news.moved = false);
+      if (data.results && data.results.length > 0) {
+        this.medianews = data.results;
+        console.log("fetched data", this.medianews);
+        this.ids = this.medianews.map((news: any) => news._id);
+        this.medianews.forEach((news: any) => news.moved = false);
+      } else {
+        this.currentPage--;
+      }
+    },
+    error => {
+      console.error("Error fetching data", error);
+      this.currentPage--;
     }
   );
 }
 
-currentPage: number = 1;
-pageSize: number = 10;
-
 loadPage(pageNumber: number): void {
-  this.currentPage = pageNumber;
-  console.log("page numbers",this.currentPage)
-  this.fetchnews(this.currentPage, this.pageSize);
+  if (pageNumber > 0) { 
+    this.currentPage = pageNumber;
+    console.log("page numbers", this.currentPage);
+    this.fetchnews(this.currentPage, this.pageSize);
+  }
 }
 
 
@@ -585,23 +612,50 @@ deleteNews(id: any): void {
 //   );
 // }
 
-productionnews(pageNumber: number = 1, pageSize: number = 10): void {
-  this.adminservice.productionnews(pageNumber, pageSize).subscribe(
-    data => {
-      this.productiondata = data.results;
-      console.log("Fetched production data", this.productiondata);
-    }
-  );
-}
+// productionnews(pageNumber: number = 1, pageSize: number = 10): void {
+//   this.adminservice.productionnews(pageNumber, pageSize).subscribe(
+//     data => {
+//       this.productiondata = data.results;
+//       console.log("Fetched production data", this.productiondata);
+//     }
+//   );
+// }
+
 currentProductionPage: number = 1;
 productionPageSize: number = 10;
 
-loadProductionPage(pageNumber: number): void {
-  this.currentProductionPage = pageNumber;
-  console.log("Production page number", this.currentProductionPage);
-  this.productionnews(this.currentProductionPage, this.productionPageSize);
+// loadProductionPage(pageNumber: number): void {
+//   this.currentProductionPage = pageNumber;
+//   console.log("Production page number", this.currentProductionPage);
+//   this.productionnews(this.currentProductionPage, this.productionPageSize);
+// }
+
+productionnews(pageNumber: number = 1, pageSize: number = 10): void {
+  this.adminservice.productionnews(pageNumber, pageSize).subscribe(
+    data => {
+      if (data.results && data.results.length > 0) {
+        this.productiondata = data.results;
+        console.log("Fetched production data", this.productiondata);
+      } else {
+       
+        this.currentProductionPage--;
+      }
+    },
+    error => {
+      console.error("Error fetching production data", error);
+
+      this.currentProductionPage--;
+    }
+  );
 }
 
+loadProductionPage(pageNumber: number): void {
+  if (pageNumber > 0) {
+    this.currentProductionPage = pageNumber;
+    console.log("Production page number", this.currentProductionPage);
+    this.productionnews(this.currentProductionPage, this.productionPageSize);
+  }
+}
 
 
 

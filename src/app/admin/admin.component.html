@@ -591,6 +591,7 @@
         </tbody>
       </table>
     </div>
+    
 
     <div class="grid-item">
       <h1>Production Data</h1>
@@ -620,16 +621,18 @@
               <img [src]="production.image_location ? 'data:image/jpeg;base64,' + production.image_location : 'assets/modi.jpg'" class="card-img-top" alt="{{ production.headline }}" style="height: 100px; width: 100px;">
             </td>
             <td>{{ production.headline }}</td>
-            <td>{{ production.desc || 'No summary available' }}</td>
+            <td>{{ production.desc || 'No desc available' }}</td>
             <td>{{production.short_description}}</td>
             <td><a [href]="production.url" target="_blank">{{ production.url }}</a></td>
             <td>{{ production.category_id?.name || 'No category' }}</td>
             <td>{{ production.news_sub_category_id?.name || 'No subcategory' }}</td>
             <td>{{ production.status }}</td>
+
             <td>{{ production.location }}</td>
             <td>
-              <button (click)="deleteProduction(production._id)">Delete</button>
+              <button (click)="deleteProduction(production._id)" >Delete</button>
               <button (click)="undoFromProductiondb(production._id)">Undo</button>
+            
             </td>
           </tr>
         </tbody>
@@ -637,3 +640,5 @@
     </div>
   </div>
 </div>
+
+
