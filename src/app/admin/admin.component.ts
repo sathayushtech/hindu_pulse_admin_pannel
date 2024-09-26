@@ -459,15 +459,17 @@ fetchnews(pageNumber: number = 1, pageSize: number = 50): void {
     data => {
       if (data.results && data.results.length > 0) {
         this.medianews = data.results;
-        console.log("fetched data", this.medianews);
+        console.log("fetched datafffffffff", this.medianews);
         this.ids = this.medianews.map((news: any) => news._id);
         this.medianews.forEach((news: any) => news.moved = false);
       } else {
+        
         this.currentPage--;
       }
     },
     error => {
       console.error("Error fetching data", error);
+     
       this.currentPage--;
     }
   );
@@ -480,7 +482,6 @@ loadPage(pageNumber: number): void {
     this.fetchnews(this.currentPage, this.pageSize);
   }
 }
-
 
 // transfer(id: string): void {
 //   const itemToTransfer = this.medianews.find((news:any) => news._id === id);
