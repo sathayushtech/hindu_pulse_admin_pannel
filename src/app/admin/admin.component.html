@@ -1,0 +1,624 @@
+<!-- 
+
+
+<div class="container mt-5 mb-3">
+  <div class="grid-container">
+    <div class="grid-item">
+      <h1>Staging Data</h1>
+      <button style="margin-right: 15px;" (click)="moveSelected()">Move Selected</button>
+      <button style="margin-right: 15px;" (click)="deleteSelected()">Delete Selected</button>
+     
+        <button (click)="loadPage(currentPage - 1)" [disabled]="currentPage <= 1"><span class="arrow prev" >&#9664;</span> </button>
+        <span>{{ currentPage }}</span>
+        <button (click)="loadPage(currentPage + 1)"><span class="arrow next">&#9654;</span></button>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" (change)="toggleSelectAll($event)" /></th>
+            <th>Image</th>
+            <th>Headline</th>
+            <th>Description</th>
+            <th>short_Desc</th>
+            <th>URL</th>
+            <th>Category</th>
+            <th>Subcategory</th>
+            <th>Status</th>
+            <th>Location</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let newsdata of medianews" [ngClass]="{ 'visited': visitedNews.includes(newsdata._id) }" >
+            <td><input type="checkbox" [(ngModel)]="newsdata.selected" /></td>
+            <td>
+              <div *ngIf="isEditingId === newsdata._id">
+                <nz-upload
+                  nzListType="picture-card"
+                  [(nzFileList)]="bannerFileList"
+                  [nzShowButton]="bannerFileList.length < 1"
+                  (nzChange)="handleBannerFileChange($event)"
+                  [nzAccept]="'image/*'"
+                >
+                  <div style="width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; border: 1px solid #d9d9d9; border-radius: 4px; cursor: pointer;">
+                    <i nz-icon nzType="plus" style="font-size: 24px;"></i>
+                    <span style="margin-left: 8px;">Upload image</span>
+                  </div>
+                </nz-upload>
+              </div>
+              <ng-container *ngIf="isEditingId !== newsdata._id">
+                <img *ngIf="newsdata.image_location && newsdata.image_location !== 'defaultimage'" 
+                    [src]="'data:image/jpeg;base64,' + newsdata.image_location" 
+                    class="card-img-top" 
+                    alt="{{ newsdata.headline }}" 
+                    style="height: 100px; width: 100px;">
+                <img *ngIf="!newsdata.image_location || newsdata.image_location === 'defaultimage'" 
+                    src="../../assets/defaultimage.jpg" 
+                    class="card-img-top" 
+                    alt="Default image" 
+                    style="height: 100px; width: 100px;">
+              </ng-container>
+            </td>
+            <td>
+              <div *ngIf="isEditingId === newsdata._id; else viewModeHeadline">
+                <textarea [(ngModel)]="editedNewsItem.headline"></textarea>
+              </div>
+              <ng-template #viewModeHeadline>
+                {{ newsdata.headline || 'No heading available' }}
+              </ng-template>
+            </td>
+            <td>
+              <div *ngIf="isEditingId === newsdata._id; else viewModedesc">
+                <textarea [(ngModel)]="editedNewsItem.desc"></textarea>
+              </div>
+              <ng-template #viewModedesc>
+                {{ newsdata.desc || 'No desc available' }}
+              </ng-template>
+            </td>
+                 ################### -->
+            <!-- <td>
+              <div *ngIf="isEditingId === newsdata._id; else viewModeshortdescription">
+                <textarea [(ngModel)]="editedNewsItem.short_description"></textarea>
+              </div>
+              <ng-template #viewModeshortdescription>
+                {{ newsdata.short_description||'No short desc available'}}
+              </ng-template>
+            </td>
+
+            <td><a [href]="newsdata.url" target="_blank">{{ newsdata.url }}</a></td> --> -->
+            
+            <!-- <td>
+              <div *ngIf="isEditingId === newsdata._id; else viewModeCategory">
+                <select [(ngModel)]="editedNewsItem.category_id" (change)="onCategoryChange($event)">
+                  <option *ngFor="let category of categories" [value]="category._id">
+                    {{ category.name }}
+                  </option>
+                </select>
+              </div>
+              <ng-template #viewModeCategory>
+                {{ newsdata.category?.name || 'No category' }}
+              </ng-template>
+            </td>
+            <td>
+              <div *ngIf="isEditingId === newsdata._id; else viewModeSubCategory">
+                <select [(ngModel)]="editedNewsItem.news_sub_category_id">
+                  <option *ngFor="let subCategory of filteredSubCategories" [value]="subCategory._id">
+                    {{ subCategory.name }}
+                  </option>
+                </select>
+              </div>
+              <ng-template #viewModeSubCategory>
+                {{ newsdata.subcategory?.name || 'No subcategory' }}
+              </ng-template>
+            </td> -->
+
+<!-- 
+            <td>
+              <div *ngIf="isEditingId === newsdata._id; else viewModeCategory">
+                <select [(ngModel)]="editedNewsItem.category_id" (change)="onCategoryChange($event)">
+                  <option *ngFor="let category of categories" [value]="category._id">
+                    {{ category.name }}
+                  </option>
+                </select>
+              </div>
+              <ng-template #viewModeCategory>
+                {{ getCategoryName(newsdata.category_id) }}
+              </ng-template>
+            </td>
+            <td>
+              <div *ngIf="isEditingId === newsdata._id; else viewModeSubCategory">
+                <select [(ngModel)]="editedNewsItem.news_sub_category_id">
+                  <option *ngFor="let subcategory of filteredSubCategories" [value]="subcategory._id">
+                    {{ subcategory.name }}
+                  </option>
+                </select>
+              </div>
+              <ng-template #viewModeSubCategory>
+                {{ getSubCategoryName(newsdata.news_sub_category_id) }}
+              </ng-template>
+            </td>
+            
+            <td>
+              <div *ngIf="isEditingId === newsdata._id; else viewModeStatus">
+                <select [(ngModel)]="editedNewsItem.status">
+                  <option value="pending">Pending</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="SUCCESS">Success</option>
+                  <option value="failed">Failed</option>
+                </select>
+              </div>
+              <ng-template #viewModeStatus>
+                {{ newsdata.status || 'No status' }}
+              </ng-template>
+            </td>
+            <td>
+              <div *ngIf="isEditingId === newsdata._id; else viewModeLocation">
+                <input type="text" [(ngModel)]="editedNewsItem.location" />
+              </div>
+              <ng-template #viewModeLocation>
+                {{ newsdata.location || 'No location' }}
+              </ng-template>
+            </td>
+            <td>
+              <div *ngIf="isEditingId === newsdata._id; else actionButtons">
+                <button (click)="saveChanges()">Save</button>
+                <button (click)="cancelEdit()">Cancel</button>
+              </div>
+              <ng-template #actionButtons>
+                <button (click)="transfer(newsdata._id)">Move</button>
+                <button (click)="startEditing(newsdata)">Edit</button>
+                <button (click)="deleteNews(newsdata._id)">Delete</button>
+              </ng-template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+
+    <div class="grid-item">
+      <h1>Production Data</h1>
+      <button (click)="loadProductionPage(currentProductionPage - 1)" [disabled]="currentProductionPage <= 1"><span class="arrow prev" >&#9664;</span></button>
+      <span>{{ currentProductionPage }}</span>
+      
+      <button (click)="loadProductionPage(currentProductionPage + 1)"><span class="arrow next">&#9654;</span></button>
+      
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Headline</th>
+            <th>Description</th>
+            <th>short_desc</th>
+            <th>URL</th>
+            <th>Category</th>
+            <th>Subcategory</th>
+            <th>Status</th>
+            <th>Location</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let production of productiondata">
+            <td>
+              <img [src]="production.image_location ? production.image_location : 'assets/modi.jpg'" class="card-img-top" alt="{{ production.headline }}" style="height: 100px; width: 100px;">
+            </td>
+            <td>{{ production.headline }}</td>
+            <td>{{ production.desc || 'No desc available' }}</td>
+            <td>{{production.short_description}}</td>
+            <td><a [href]="production.url" target="_blank">{{ production.url }}</a></td>
+            <td>{{ production.category_id?.name || 'No category' }}</td>
+            <td>{{ production.news_sub_category_id?.name || 'No subcategory' }}</td>
+            <td>{{ production.status }}</td>
+
+            <td>{{ production.location }}</td>
+            <td>
+              <button (click)="deleteProduction(production._id)" >Delete</button>
+              <button (click)="undoFromProductiondb(production._id)">Undo</button>
+            
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+ -->
+<!-- it is perfectly working  -->
+
+ <!-- <div class="container mt-5 mb-3">
+  <div class="grid-container"> 
+    <div class="grid-item">
+      <h1>Staging Data</h1>
+      <button style="margin-right: 15px;" (click)="moveSelected()">Move Selected</button>
+      <button style="margin-right: 15px;" (click)="deleteSelected()">Delete Selected</button>
+      
+      <button (click)="loadPage(currentPage - 1)" [disabled]="currentPage <= 1"><span class="arrow prev">&#9664;</span></button>
+      <span>{{ currentPage }}</span>
+      <button (click)="loadPage(currentPage + 1)"><span class="arrow next">&#9654;</span></button>
+
+      
+      <div class="card-grid">
+        <div class="news-card" *ngFor="let newsdata of medianews" [ngClass]="{ 'visited': visitedNews.includes(newsdata._id) }">
+          <div class="d-flex flex-row">
+            <p>checkbox<input type="checkbox" [(ngModel)]="newsdata.selected" /></p>
+          </div>
+          
+          <div class="image-section">
+            <div *ngIf="isEditingId === newsdata._id">
+              <nz-upload
+                nzListType="picture-card"
+                [(nzFileList)]="bannerFileList"
+                [nzShowButton]="bannerFileList.length < 1"
+                (nzChange)="handleBannerFileChange($event)"
+                [nzAccept]="'image/*'">
+                <div class="upload-placeholder">
+                  <i nz-icon nzType="plus" style="font-size: 24px;"></i>
+                  <span>Upload image</span>
+                </div>
+              </nz-upload>
+            </div>
+            <ng-container *ngIf="isEditingId !== newsdata._id">
+              <img *ngIf="newsdata.image_location && newsdata.image_location !== 'defaultimage'" 
+                   [src]="'data:image/jpeg;base64,' + newsdata.image_location" 
+                   class="card-img-top" 
+                   alt="{{ newsdata.headline }}">
+              <img *ngIf="!newsdata.image_location || newsdata.image_location === 'defaultimage'" 
+                   src="../../assets/defaultimage.jpg" 
+                   class="card-img-top" 
+                   alt="Default image">
+            </ng-container>
+          </div> -->
+          <!-- <div class="headline-section">
+            <div *ngIf="isEditingId === newsdata._id; else viewModeHeadline">
+              <textarea [(ngModel)]="editedNewsItem.headline"></textarea>
+            </div>
+            <ng-template #viewModeHeadline>
+              <p><b>headline:</b>
+              {{ newsdata.headline || 'No heading available' }}</p>
+            </ng-template>
+          </div> -->
+          <!-- <div class="headline-section">
+            <div *ngIf="isEditingId === newsdata._id; else viewModeHeadline">
+              <p><b>headline:</b></p>
+              <textarea [(ngModel)]="editedNewsItem.headline" placeholder="Edit headline..."></textarea>
+            </div>
+            <ng-template #viewModeHeadline>
+              <p><b>headline:</b> {{ newsdata.headline || 'No heading available' }}</p>
+            </ng-template>
+          </div>
+          
+          
+          <div class="desc-section">
+            <div *ngIf="isEditingId === newsdata._id; else viewModedesc">
+              <p>
+                <b>des:</b>
+              </p>
+              <textarea [(ngModel)]="editedNewsItem.desc"  placeholder="Edit description..."></textarea>
+            </div>
+            <ng-template #viewModedesc>
+              <p><b>desc:</b>
+              {{ newsdata.desc || 'No desc available' }}</p>
+            </ng-template>
+          </div>
+          <div class="short-desc">
+            <td>
+              <div *ngIf="isEditingId === newsdata._id; else viewModeshortdescription">
+                <p>
+                  <b>short desc:</b>
+                </p>
+                <textarea [(ngModel)]="editedNewsItem.short_description"  placeholder="Edit shortdesc..."></textarea>
+              </div>
+              <ng-template #viewModeshortdescription>
+                <p><b>short desc:</b>
+                {{ newsdata.short_description||'No short desc available'}}</p>
+              </ng-template>
+            </td>
+          </div>
+          <div class="link"> -->
+            <!-- <td><p><b>url:</b><a [href]="newsdata.url" target="_blank">{{ newsdata.url }}</a></p></td> -->
+          <!-- </div>
+          <div class="category">
+            <td>
+              <div *ngIf="isEditingId === newsdata._id; else viewModeCategory">
+                <p><b>
+                  category:</b>
+                <select [(ngModel)]="editedNewsItem.category_id" (change)="onCategoryChange($event)">
+                  <option *ngFor="let category of categories" [value]="category._id">
+                   {{ category.name }}
+                  </option>
+                </select>
+                </p>
+              </div>
+              <ng-template #viewModeCategory>
+                {{ getCategoryName(newsdata.category_id) }}
+              </ng-template>
+            </td>
+            </div>
+            <div class="subcatgory">
+            <td>
+              <div *ngIf="isEditingId === newsdata._id; else viewModeSubCategory"><p><b>subcategory:</b>
+                <select [(ngModel)]="editedNewsItem.news_sub_category_id">
+                  <option *ngFor="let subcategory of filteredSubCategories" [value]="subcategory._id">
+                    {{ subcategory.name }}
+                  </option>
+                </select>
+              </p>
+              </div>
+              <ng-template #viewModeSubCategory>
+                {{ getSubCategoryName(newsdata.news_sub_category_id) }}
+              </ng-template>
+            </td>
+             <div class="status">
+              <td>
+                <div *ngIf="isEditingId === newsdata._id; else viewModeStatus"><p>
+                  <b>status:</b>
+                  <select [(ngModel)]="editedNewsItem.status">
+                    <option value="pending">Pending</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="SUCCESS">Success</option>
+                    <option value="failed">Failed</option>
+                  </select>
+                </p>
+                
+                </div>
+                <ng-template #viewModeStatus>
+                 <p><b>status:{{ newsdata.status || 'No status' }}</b>
+                 </p> 
+                </ng-template>
+              </td>
+             </div>
+             <div class="location">
+              <td>
+                <div *ngIf="isEditingId === newsdata._id; else viewModeLocation">
+                  <p><b>location:</b> <input type="text" [(ngModel)]="editedNewsItem.location" />
+                  </p>
+                 
+                </div>
+                <ng-template #viewModeLocation>
+                  <p><b>location:{{ newsdata.location || 'No location' }}</b></p>
+                </ng-template>
+              </td>
+              <td>
+
+             </div>
+          </div>
+          <div class="actions-section">
+            <div *ngIf="isEditingId === newsdata._id; else actionButtons">
+              <button (click)="saveChanges()">Save</button>
+              <button (click)="cancelEdit()">Cancel</button>
+            </div>
+            <ng-template #actionButtons>
+              <button (click)="transfer(newsdata._id)">Move</button>
+              <button (click)="startEditing(newsdata)">Edit</button>
+              <button (click)="deleteNews(newsdata._id)">Delete</button>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-item">
+      <h1>Production Data</h1>
+      <button (click)="loadProductionPage(currentProductionPage - 1)" [disabled]="currentProductionPage <= 1"><span class="arrow prev">&#9664;</span></button>
+      <span>{{ currentProductionPage }}</span>
+      <button (click)="loadProductionPage(currentProductionPage + 1)"><span class="arrow next">&#9654;</span></button>
+
+      <div class="card-grid">
+        <div class="news-card" *ngFor="let production of productiondata">
+          <img [src]="production.image_location ? production.image_location : 'assets/modi.jpg'" class="card-img-top" alt="{{ production.headline }}">
+          <div class="headline"><b>headline:</b>{{ production.headline }}</div>
+          <div class="desc"><b>desc:</b>{{ production.desc || 'No desc available' }}</div>
+          <div><b>shortdesc:</b>{{production.short_description}}</div> -->
+            <!-- <div><b>url:</b><a [href]="production.url" target="_blank">{{ production.url }}</a><div> -->
+            <!-- <div><b>category:</b>{{ production.category_id?.name || 'No category' }}</div>
+            <div><b>subcategory:</b>{{ production.news_sub_category_id?.name || 'No subcategory' }}</div>
+            <div><b>status:</b>{{ production.status }}</div>
+          <div class="actions-section">
+            <button (click)="deleteProduction(production._id)">Delete</button>
+            <button (click)="undoFromProductiondb(production._id)">Undo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- 
+#####################################################perfect code and working good ################### -->
+
+
+<div class="container mt-5 mb-3">
+  <div class="grid-container"> 
+    <div class="grid-item">
+      <!-- staging card -->
+      <h1>Staging Data</h1>
+      <button style="margin-right: 15px;" (click)="moveSelected()">Move Selected</button>
+      <button style="margin-right: 15px;" (click)="deleteSelected()">Delete Selected</button>
+
+      <button (click)="loadPage(currentPage - 1)" [disabled]="currentPage <= 1"><span class="arrow prev">&#9664;</span></button>
+      <span>{{ currentPage }}</span>
+      <button (click)="loadPage(currentPage + 1)"><span class="arrow next">&#9654;</span></button>
+
+      <div class="card-grid">
+        <div class="news-card" *ngFor="let newsdata of medianews" [ngClass]="{ 'visited': visitedNews.includes(newsdata._id) }" [ngClass]="{ 'visited': visitedNews.includes(newsdata._id), 'highlighted': savedNews.includes(newsdata._id) }">
+          
+          <div class="d-flex flex-row">
+            <p>checkbox<input type="checkbox" [(ngModel)]="newsdata.selected" /></p>
+          </div>
+
+          <div class="image-section">
+            <div *ngIf="isEditingId === newsdata._id">
+              <nz-upload
+                nzListType="picture-card"
+                [(nzFileList)]="bannerFileList"
+                [nzShowButton]="bannerFileList.length < 1"
+                (nzChange)="handleBannerFileChange($event)"
+                [nzAccept]="'image/*'">
+                <div class="upload-placeholder">
+                  <i nz-icon nzType="plus" style="font-size: 24px;"></i>
+                  <span>Upload image</span>
+                </div>
+              </nz-upload>
+            </div>
+            <ng-container *ngIf="isEditingId !== newsdata._id">
+              <img *ngIf="newsdata.image_location && newsdata.image_location !== 'defaultimage'" 
+                   [src]="newsdata.image_location" 
+                   class="card-img-top" 
+                   alt="{{ newsdata.headline }}">
+              <img *ngIf="!newsdata.image_location || newsdata.image_location === 'defaultimage'" 
+                   src="../../assets/defaultimage.jpg" 
+                   class="card-img-top" 
+                   alt="Default image">
+            </ng-container>
+          </div>
+
+          <div class="headline-section">
+            <div *ngIf="isEditingId === newsdata._id; else viewModeHeadline">
+              <p><b>headline:</b></p>
+              <textarea [(ngModel)]="editedNewsItem.headline" placeholder="Edit headline..."></textarea>
+            </div>
+            <ng-template #viewModeHeadline>
+              <p><b>headline:</b> {{ newsdata.headline || 'No heading available' }}</p>
+            </ng-template>
+          </div>
+
+          <div class="desc-section">
+            <div *ngIf="isEditingId === newsdata._id; else viewModedesc">
+              <p><b>des:</b></p>
+              <textarea [(ngModel)]="editedNewsItem.desc"  placeholder="Edit description..."></textarea>
+            </div>
+            <ng-template #viewModedesc>
+              <p><b>desc:</b> {{ newsdata.desc || 'No desc available' }}</p>
+            </ng-template>
+          </div>
+          
+          <div class="short-desc">
+            <div *ngIf="isEditingId === newsdata._id; else viewModeshortdescription">
+              <p><b>short desc:</b></p>
+              <textarea [(ngModel)]="editedNewsItem.short_description" placeholder="Edit shortdesc..."></textarea>
+            </div>
+            <ng-template #viewModeshortdescription>
+              <p><b>short desc:</b> {{ newsdata.short_description || 'No short desc available' }}</p>
+            </ng-template>
+          </div>
+          
+          <div class="category">
+            <div *ngIf="isEditingId === newsdata._id; else viewModeCategory">
+              <p><b>category:</b></p>
+              <select [(ngModel)]="editedNewsItem.category_id" (change)="onCategoryChange($event)">
+                <option *ngFor="let category of categories" [value]="category._id">
+                  {{ category.name }}
+                </option>
+              </select>
+            </div>
+            <ng-template #viewModeCategory>
+              <p>{{ getCategoryName(newsdata.category_id) }}</p>
+            </ng-template>
+          </div>
+
+          <div class="subcategory">
+            <div *ngIf="isEditingId === newsdata._id; else viewModeSubCategory">
+              <p><b>subcategory:</b></p>
+              <select [(ngModel)]="editedNewsItem.news_sub_category_id">
+                <option *ngFor="let subcategory of filteredSubCategories" [value]="subcategory._id">
+                  {{ subcategory.name }}
+                </option>
+              </select>
+            </div>
+            <ng-template #viewModeSubCategory>
+              <p>{{ getSubCategoryName(newsdata.news_sub_category_id) }}</p>
+            </ng-template>
+          </div>
+
+          <div class="status">
+            <div *ngIf="isEditingId === newsdata._id; else viewModeStatus">
+              <p><b>status:</b></p>
+              <select [(ngModel)]="editedNewsItem.status">
+                <option value="pending">Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="SUCCESS">Success</option>
+                <option value="failed">Failed</option>
+              </select>
+            </div>
+            <ng-template #viewModeStatus>
+              <p><b>status:</b> {{ newsdata.status || 'No status' }}</p>
+            </ng-template>
+          </div>
+
+          <div class="location" style="margin-bottom: 10px;">
+            <div *ngIf="isEditingId === newsdata._id; else viewModeLocation">
+              <p><b>location:</b></p>
+              <input type="text" [(ngModel)]="editedNewsItem.location" />
+            </div>
+            <ng-template #viewModeLocation>
+              <p><b>location:</b> {{ newsdata.location || 'No location' }}</p>
+            </ng-template>
+          </div>
+
+          <div *ngIf="isEditingId === newsdata._id">
+            <nz-upload
+              nzListType="text"
+              [(nzFileList)]="audioFileList"
+              [nzShowButton]="true"
+              (nzChange)="handleAudioFileChange($event)"
+              [nzAccept]="'audio/*'">
+              <button nz-button>
+                <i nz-icon nzType="upload"></i> Upload Audio
+              </button>
+            </nz-upload>
+          </div>
+
+          <div class="actions-section">
+            <div *ngIf="isEditingId === newsdata._id; else actionButtons">
+              <button (click)="saveChanges()">Save</button>
+              <button (click)="cancelEdit()">Cancel</button>
+            </div>
+            <ng-template #actionButtons>
+              <button (click)="transfer(newsdata._id)">Move</button>
+              <button (click)="startEditing(newsdata)">Edit</button>
+              <button (click)="deleteNews(newsdata._id)">Delete</button>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="grid-item">
+      <!-- production card -->
+      <h1>Production Data</h1>
+      <button (click)="loadProductionPage(currentProductionPage - 1)" [disabled]="currentProductionPage <= 1"><span class="arrow prev">&#9664;</span></button>
+      <span>{{ currentProductionPage }}</span>
+      <button (click)="loadProductionPage(currentProductionPage + 1)"><span class="arrow next">&#9654;</span></button>
+      <div class="card-grid">
+        <div class="news-card" *ngFor="let production of productiondata">
+          <img [src]="production.image_location ? production.image_location : 'assets/modi.jpg'" class="card-img-top" alt="{{ production.headline }}">
+          <div class="headline"><b>headline:</b>{{ production.headline }}</div>
+          <div class="desc"><b>desc:</b>{{ production.desc || 'No desc available' }}</div>
+          <div><b>shortdesc:</b>{{production.short_description}}</div>
+          <div  style="margin-top: 10px;text-align: center;" >
+            <p style="text-align: left;">Listen to this news article now </p>
+            <audio *ngIf="production.audio_location"  controls style="width: 180%;font-size: 30px;">
+              <source [src]="production.audio_location" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+          <div><b>category:</b>{{ production.category_id?.name || 'No category' }}</div>
+          <div><b>subcategory:</b>{{ production.news_sub_category_id?.name || 'No subcategory' }}</div>
+          <div><b>status:</b>{{ production.status }}</div>
+          <div class="actions-section">
+            <button (click)="deleteProduction(production._id)">Delete</button>
+            <button (click)="undoFromProductiondb(production._id)">Undo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

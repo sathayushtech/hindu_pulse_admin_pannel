@@ -1,0 +1,301 @@
+/* 
+
+    .card {
+    border: 2px solid #e0e0e0; 
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    margin-bottom: 20px; 
+    padding: 10px;
+    margin: 10px;
+  }
+  .large-textarea {
+    width: 100%;
+    height: 150px; 
+    width: 100px; 
+  }
+  .large-textarea {
+    width: 100%;
+    height: 150px; 
+    width: 500px; 
+  }
+
+
+
+  .flex-container {
+    display: flex;
+    justify-content: space-between;
+}
+.flex-item {
+    flex: 1;
+   
+}
+
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.grid-item {
+  padding: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  text-align: left;
+} */
+
+/* 
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.grid-item {
+  padding: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  text-align: left;
+} */
+
+
+/* 
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.grid-item {
+  padding: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  text-align: left;
+} */
+
+
+/* .grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.grid-item {
+  padding: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  text-align: left;
+} */
+
+/* table design css */
+
+/* .grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.grid-item {
+  padding: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+
+
+
+
+ 
+.table {
+  width: 100%;
+}
+
+.table td {
+  padding: 8px;
+  max-width: 400px;
+
+}
+
+.table a {
+
+  width: 100%;
+ 
+}
+
+.edited {
+  background-color: #d4edda;
+}
+
+.moved {
+  background-color: #d1ecf1;
+}
+
+.edited-row {
+  background-color: #e6f7ff;
+}
+.moved-item {
+  background-color: #d4edda; 
+  border-left: 5px solid #28a745; 
+}
+
+
+.highlight {
+  background-color: orange;
+}
+
+
+.visited {
+  background-color:rgb(172, 163, 163); 
+} */
+
+
+/* .moved {
+  background-color: #e0f7fa; 
+} */
+
+
+
+
+
+
+
+.grid-container {
+  display: grid; /* Changed from flex to grid */
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 20px; /* Space between the grid items */
+}
+
+.card-grid {
+  display: grid;
+  /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
+  gap: 20px;
+}
+
+.news-card {
+  border: 1px solid #ddd;
+  /* height: 700px;
+  width: 700px; */
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  text-align: start;
+}
+
+.news-card img {
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+}
+
+.news-card .headline,
+.news-card .desc {
+  margin-top: 10px;
+}
+
+.actions-section {
+  margin-top: 15px;
+}
+
+.upload-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  width: 100px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+
+
+
+
+.visited {
+  background-color:rgb(172, 163, 163); 
+} 
+
+.success-message {
+  color: white; /* Text color */
+  background-color: green; /* Background color for success */
+  padding: 10px; /* Space around the text */
+  border-radius: 5px; /* Rounded corners */
+  margin-bottom: 20px; /* Space below the message */
+  transition: opacity 0.5s ease; /* Fade out effect */
+  opacity: 1; /* Fully visible */
+}
+
+/* Optional: Add a fade-out effect */
+.success-message.ng-leave {
+  opacity: 0;
+}
+
+
+.highlighted {
+  background-color: #e0ffe0; /* Light green for saved news */
+  transition: background-color 0.5s ease; /* Smooth transition effect */
+}
