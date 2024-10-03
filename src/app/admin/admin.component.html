@@ -436,6 +436,7 @@
       <h1>Staging Data</h1>
       <button style="margin-right: 15px;" (click)="moveSelected()">Move Selected</button>
       <button style="margin-right: 15px;" (click)="deleteSelected()">Delete Selected</button>
+      <button style="margin-right: 15px;" (click)="fetchdata()">fetchcontainer</button>
 
       <button (click)="loadPage(currentPage - 1)" [disabled]="currentPage <= 1"><span class="arrow prev">&#9664;</span></button>
       <span>{{ currentPage }}</span>

@@ -572,7 +572,18 @@ handleAudioFileChange(event: NzUploadChangeParam): void {
   }
 }
 
+newsinformation:any;
 
+fetchdata(): void {
+  this.adminservice.fetchingnews().subscribe(
+    data => {
+      this.newsinformation = data;
+    },
+    error => {
+      console.error('Error fetching categories:', error);
+    }
+  );
+}
 
 
 

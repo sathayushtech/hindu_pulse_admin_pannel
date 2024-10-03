@@ -110,7 +110,10 @@ export class AdminpageService {
   }
 
 
-
+fetchingnews():Observable<any>{
+    
+    return this.http.get("http://127.0.0.1:8000/hindupulse/Staging_db/fetch_news/");
+  }
   
 
  
