@@ -17,6 +17,7 @@ export class AdminpageService {
 
   // now modifications
   visitedNews:any[]=[];
+  savedNews: any[] = []; 
 
   // Getdata():Observable<any>{
   //   console.log("wefhm")

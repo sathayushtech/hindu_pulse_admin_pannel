@@ -294,7 +294,7 @@
   opacity: 0;
 }
 
-
+/* highlight the ontent */
 .highlighted {
   background-color: #e0ffe0; /* Light green for saved news */
   transition: background-color 0.5s ease; /* Smooth transition effect */
