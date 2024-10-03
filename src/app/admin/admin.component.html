@@ -432,6 +432,7 @@
 <div class="container mt-5 mb-3">
   <div class="grid-container"> 
     <div class="grid-item">
+      <!-- staging card -->
       <h1>Staging Data</h1>
       <button style="margin-right: 15px;" (click)="moveSelected()">Move Selected</button>
       <button style="margin-right: 15px;" (click)="deleteSelected()">Delete Selected</button>
@@ -584,7 +585,11 @@
       </div>
     </div>
 
+
+
+
     <div class="grid-item">
+      <!-- production card -->
       <h1>Production Data</h1>
       <button (click)="loadProductionPage(currentProductionPage - 1)" [disabled]="currentProductionPage <= 1"><span class="arrow prev">&#9664;</span></button>
       <span>{{ currentProductionPage }}</span>
