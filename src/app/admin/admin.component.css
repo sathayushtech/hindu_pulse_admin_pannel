@@ -235,13 +235,15 @@
 
 .news-card {
   border: 1px solid #ddd;
+  /* height: 700px;
+  width: 700px; */
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: start;
+  text-align: start;
 }
 
 .news-card img {
@@ -276,3 +278,24 @@
 .visited {
   background-color:rgb(172, 163, 163); 
 } 
+
+.success-message {
+  color: white; /* Text color */
+  background-color: green; /* Background color for success */
+  padding: 10px; /* Space around the text */
+  border-radius: 5px; /* Rounded corners */
+  margin-bottom: 20px; /* Space below the message */
+  transition: opacity 0.5s ease; /* Fade out effect */
+  opacity: 1; /* Fully visible */
+}
+
+/* Optional: Add a fade-out effect */
+.success-message.ng-leave {
+  opacity: 0;
+}
+
+
+.highlighted {
+  background-color: #e0ffe0; /* Light green for saved news */
+  transition: background-color 0.5s ease; /* Smooth transition effect */
+}
