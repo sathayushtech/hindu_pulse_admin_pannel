@@ -442,7 +442,7 @@
       <button (click)="loadPage(currentPage + 1)"><span class="arrow next">&#9654;</span></button>
 
       <div class="card-grid">
-        <div class="news-card" *ngFor="let newsdata of medianews" [ngClass]="{ 'visited': visitedNews.includes(newsdata._id) }" [ngClass]="{ 'visited': visitedNews.includes(newsdata._id), 'highlighted': savedNews.includes(newsdata._id) }">
+        <div class="news-card" *ngFor="let newsdata of medianews" >
           
           <div class="d-flex flex-row">
             <p>checkbox<input type="checkbox" [(ngModel)]="newsdata.selected" /></p>
