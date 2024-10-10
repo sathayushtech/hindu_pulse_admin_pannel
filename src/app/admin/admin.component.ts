@@ -10,6 +10,10 @@ import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 
 import { catchError, of, forkJoin } from 'rxjs';
 
+enum PublicationStatus {
+  NOT_PUBLISHED = 'Not Published',
+  PUBLISHED = 'Published'
+}
 
 
 
@@ -37,11 +41,13 @@ editedNewsItem: {
   news_sub_category_id?: string;
   image_location:string[];
   location?: string;
-  status?: string; 
+  status?: string;
+  is_published?: string; 
 } = {
   // image_location: [] 
   image_location: [], // Initialize as an empty array
   audio_location: '' // Initialize as an empty string
+  
 };
 
 medianews: any = [];
@@ -52,6 +58,7 @@ isEditingId: any;
 productiondata: any = [];
 categories: any;
 subCategories: any;
+
 selectedCategoryId: string | null = null;
 filteredSubCategories: any[] = [];
 canMove: boolean = false; 
@@ -80,28 +87,51 @@ ngOnInit() {
 currentPage: number = 1;
 pageSize: number = 50;
 
-
-
 fetchnews(pageNumber: number = 1, pageSize: number = 50): void {
   this.adminservice.Getdata(pageNumber, pageSize).subscribe(
     data => {
       if (data.results && data.results.length > 0) {
         this.medianews = data.results;
-        console.log("fetched datafffffffff", this.medianews);
+        console.log("fetched data:", this.medianews);
         this.ids = this.medianews.map((news: any) => news._id);
-        this.medianews.forEach((news: any) => news.moved = false);
+
+        // Retrieve moved items from local storage and mark them
+        const movedItems = JSON.parse(localStorage.getItem('movedNews') || '[]');
+        this.medianews.forEach((news: any) => {
+          news.moved = movedItems.includes(news._id); // Set moved property based on local storage
+        });
       } else {
-        
         this.currentPage--;
       }
     },
     error => {
       console.error("Error fetching data", error);
-     
       this.currentPage--;
     }
   );
 }
+
+
+// fetchnews(pageNumber: number = 1, pageSize: number = 50): void {
+//   this.adminservice.Getdata(pageNumber, pageSize).subscribe(
+//     data => {
+//       if (data.results && data.results.length > 0) {
+//         this.medianews = data.results;
+//         console.log("fetched datafffffffff", this.medianews);
+//         this.ids = this.medianews.map((news: any) => news._id);
+//         this.medianews.forEach((news: any) => news.moved = false);
+//       } else {
+        
+//         this.currentPage--;
+//       }
+//     },
+//     error => {
+//       console.error("Error fetching data", error);
+     
+//       this.currentPage--;
+//     }
+//   );
+// }
 
 loadPage(pageNumber: number): void {
   if (pageNumber > 0) { 
@@ -111,8 +141,6 @@ loadPage(pageNumber: number): void {
   }
 }
 
-
-
 transfer(id: string): void {
   const itemToTransfer = this.medianews.find((news: any) => news._id === id);
 
@@ -121,13 +149,12 @@ transfer(id: string): void {
       this.adminservice.transferData(id).subscribe(
         response => {
           console.log('Data transferred successfully:', response);
-          this.fetchnews(); 
-          
-          
-          if (!this.visitedNews.includes(id)) {
-            this.visitedNews.push(id);
-            localStorage.setItem('visitedNews', JSON.stringify(this.visitedNews)); 
-          }
+          itemToTransfer.moved = true; // Set moved property to true
+
+          // Store moved item in local storage
+          this.storeMovedItem(id);
+
+          this.fetchnews(); // Refresh the news list
         },
         error => {
           console.error('Error transferring data:', error);
@@ -141,6 +168,44 @@ transfer(id: string): void {
   }
 }
 
+// Store moved item ID in local storage
+private storeMovedItem(id: string): void {
+  const movedItems = JSON.parse(localStorage.getItem('movedNews') || '[]');
+  if (!movedItems.includes(id)) {
+    movedItems.push(id);
+    localStorage.setItem('movedNews', JSON.stringify(movedItems));
+  }
+}
+
+
+// transfer(id: string): void {
+//   const itemToTransfer = this.medianews.find((news: any) => news._id === id);
+
+//   if (itemToTransfer) {
+//     if (itemToTransfer.status === 'SUCCESS') {
+//       this.adminservice.transferData(id).subscribe(
+//         response => {
+//           console.log('Data transferred successfully:', response);
+//           this.fetchnews(); 
+          
+          
+//           if (!this.visitedNews.includes(id)) {
+//             this.visitedNews.push(id);
+//             localStorage.setItem('visitedNews', JSON.stringify(this.visitedNews)); 
+//           }
+//         },
+//         error => {
+//           console.error('Error transferring data:', error);
+//         }
+//       );
+//     } else {
+//       alert('Item cannot be transferred because its status is not "SUCCESS".');
+//     }
+//   } else {
+//     console.error('Item not found for transfer:', id);
+//   }
+// }
+
 startEditing(newsItem: any): void {
   this.isEditingId = newsItem._id;
   this.editedNewsItem = { 
@@ -148,7 +213,8 @@ startEditing(newsItem: any): void {
     image_location: Array.isArray(newsItem.image_location) ? newsItem.image_location : [newsItem.image_location || ''],
     audio_location: newsItem.audio_location || '', // Store audio as a string
     category: newsItem.category_id || null,
-    subcategory: newsItem.news_sub_category_id || null
+    subcategory: newsItem.news_sub_category_id || null,
+    published_at: newsItem.is_published || 'Not published', // Corrected to use newsItem
   };
   this.showFileInput[this.isEditingId] = !newsItem.image_location || newsItem.image_location.length === 0;
 }
@@ -262,6 +328,8 @@ saveChanges(): void {
           ? this.editedNewsItem.image_location
           : currentNews.image_location,
         audio_location: this.editedNewsItem.audio_location || currentNews.audio_location,
+        // published_at: this.editedNewsItem.is_published || 'Not published',
+        published_at: this.editedNewsItem.is_published, // Directly assign enum value
         location: this.editedNewsItem.location || currentNews.location,
         status: this.editedNewsItem.status || currentNews.status
       };

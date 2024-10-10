@@ -443,7 +443,7 @@
       <button (click)="loadPage(currentPage + 1)"><span class="arrow next">&#9654;</span></button>
 
       <div class="card-grid">
-        <div class="news-card" *ngFor="let newsdata of medianews" >
+        <div class="news-card" *ngFor="let newsdata of medianews" [ngClass]="{'highlighted': newsdata.moved}">
           
           <div class="d-flex flex-row">
             <p>checkbox<input type="checkbox" [(ngModel)]="newsdata.selected" /></p>
@@ -548,6 +548,17 @@
             </ng-template>
           </div>
 
+
+          <!-- <div class="published-at">
+            <div *ngIf="isEditingId === newsdata._id; else viewModePublishedAt">
+              <p><b>Published At:</b></p>
+              <input type="text" [(ngModel)]="editedNewsItem.is_published" [value]="editedNewsItem.is_published" />
+            </div>
+            <ng-template #viewModePublishedAt>
+              <p><b>Published At:</b> {{ newsdata.is_published || PublicationStatus.NOT_PUBLISHED }}</p>
+            </ng-template>
+          </div> -->
+          
           <div class="location" style="margin-bottom: 10px;">
             <div *ngIf="isEditingId === newsdata._id; else viewModeLocation">
               <p><b>location:</b></p>
